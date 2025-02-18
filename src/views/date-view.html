@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Zadanie 3</title>
+    <meta name="description" content="Zadanie wykonane przez Semena Sapronova w ramach zadania rekrutacyjnego"/>
+</head>
+<style>
+    .layout{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .btn-container{
+        display: flex;
+        justify-content: center;
+        margin: 30px;
+    }
+    .button{
+        font-size: 2em;
+        cursor: pointer;
+    }
+    .time-container{
+        display: flex;
+        justify-content: center;
+    }
+    #time{
+        font-size: 5em;
+    }
+</style>
+<body>
+
+    <div class="layout">
+        <div class="btn-container">
+            <button class="button" onclick="getDate()">Pokaż date</button>
+        </div>
+        <div class="time-container">
+            <h1 id="time"></h1>
+        </div>
+    </div>
+
+<script>
+    var timeElement = null;
+    const url = '/api/get-date'
+    function getDate(){
+
+        if(timeElement){
+            fetch(url)
+                .then((response)=> response.json())
+                .then((body)=>{
+                    console.log(body);
+                    if(body.date){
+                        console.log(body);
+                        timeElement.innerHTML = retreveDateByLocal( body.date.trim() );
+                    }
+            })
+            .catch((err)=>{
+                console.log("Coś poszlo nie tak :"+err);
+            })
+        }
+    }
+    function retreveDateByLocal(dateToParse){
+
+        /***
+         * w tej metodzie dostosujemy date z servera do daty lokalnej wedlug strefy czasowej klienta
+         ***/
+
+        const serverDate = new Date(dateToParse);
+        const localDate = new Date(serverDate.toLocaleString());
+        if(serverDate){
+            return localDate.toDateString();
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded",(e)=> {
+        timeElement = document.getElementById("time")   ;
+    })
+</script>
+</body>
+</html>
